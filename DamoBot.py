@@ -821,6 +821,18 @@ class WebWeixin(object):
                         else:
                             print('自动回复失败')
                             logging.info('自动回复失败')
+                    if msg['FromUserName'][:2] == '@@':  #if it is  group chart
+                        [people, content] = content.split(':<br/>', 1)
+                        ans = self._simsimi(content)
+                        if ans == '你在说什么，风太大听不清列':
+                            ans = self._qingyunke(content)
+                        ans += '\n[我人不在，机器人回复-_-!]'
+                        if self.webwxsendmsg(ans, msg['FromUserName']):
+                            print('自动回复: ' + ans)
+                            logging.info('自动回复: ' + ans)
+                        else:
+                            print('自动回复失败')
+                            logging.info('自动回复失败')
             elif msgType == 3:
                 image = self.webwxgetmsgimg(msgid)
                 raw_msg = {'raw_msg': msg,
