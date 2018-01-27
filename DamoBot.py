@@ -661,8 +661,8 @@ class WebWeixin(object):
     def getUserRemarkName(self, id):
         name = '未知群' if id[:2] == '@@' else '陌生人'
         if id == self.User['UserName']:
+            # ~ print(self.User['NickName'])  # 自己
             return self.User['NickName']  # 自己
-
         if id[:2] == '@@':
             # 群
             name = self.getGroupName(id)
@@ -816,7 +816,7 @@ class WebWeixin(object):
                         ans = self._simsimi(content)
                         if ans == '你在说什么，风太大听不清列':
                             ans = self._qingyunke(content)
-                        ans += '\n[我人不在，机器人回复-_-!]'
+                        # ~ ans += '\n[我人不在，机器人回复-_-!]'
                         if self.webwxsendmsg(ans, msg['FromUserName']):
                             print('自动回复: ' + ans)
                             logging.info('自动回复: ' + ans)
@@ -825,8 +825,8 @@ class WebWeixin(object):
                             logging.info('自动回复失败')
                     elif msg['FromUserName'][:2] == '@@':  #if it is not group chart
                         [people, content] = content.split(':<br/>', 1)
-                        # ~ print(content)  ###test
-                        if content[:8] != '@达摩的小Bot':    
+                        namelen=len(self.User['NickName'])+1
+                        if content[:namelen] != '@'+self.User['NickName']:    
                             break
                         if content[:12] == '@达摩的小Bot 妹子图':    ####发送图片
                             print('111')
@@ -843,8 +843,9 @@ class WebWeixin(object):
 							# ~ else:
 								# ~ print('自动回复失败')                        
 								# ~ logging.info('自动回复失败')
-                        if content[:8] == '@达摩的小Bot':    ####发送图片
-                            content=content[9:]
+                        if content[:namelen] == '@'+self.User['NickName']:    ####发送图片
+                            content=content[namelen+1:]
+                            # ~ print(content)
                             ans = self._qingyunke(content)
                             # ~ ans += '\n[我人不在，机器人回复^_~!]'
                         if self.webwxsendmsg(ans, msg['FromUserName']):
@@ -1048,14 +1049,14 @@ class WebWeixin(object):
             print(self)
         logging.debug(self)
 
-        if self.interactive and input('[*] 是否开启自动回复模式(y/n): ') == 'y':
-            self.autoReplyMode = True
-            print('[*] 自动回复模式 ... 开启')
-            logging.debug('[*] 自动回复模式 ... 开启')
-        else:
-			#~ self.autoReplyMode = False
-            print('[*] 自动回复模式 ... 关闭')
-            logging.debug('[*] 自动回复模式 ... 关闭')
+        # ~ if self.interactive and input('[*] 是否开启自动回复模式(y/n): ') == 'y':
+            # ~ self.autoReplyMode = True
+            # ~ print('[*] 自动回复模式 ... 开启')
+            # ~ logging.debug('[*] 自动回复模式 ... 开启')
+        # ~ else:
+			# ~ #~ self.autoReplyMode = False
+            # ~ print('[*] 自动回复模式 ... 关闭')
+            # ~ logging.debug('[*] 自动回复模式 ... 关闭')
 
         if sys.platform.startswith('win'):
             import _thread
